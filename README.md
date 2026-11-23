@@ -50,6 +50,8 @@ MCP es el USB-C de la IA: un estándar para que Claude use herramientas. Instala
 
 O desde la terminal: `claude plugin marketplace add hiveflowai/claude-avanzado && claude plugin install leads@claude-avanzado`.
 
+Y el **kit** para construir lo tuyo: `/plugin install kit@claude-avanzado` trae 4 skills que le enseñan a tu Claude a crear, con el formato correcto, tu propio **MCP** (`crear-mcp`), **skills** (`crear-skill`), **plugins y conectores** (`crear-plugin`) y **agentes con horario** (`programar-agente`).
+
 Reinicia (o `/reload-plugins`), revisa con `/mcp` que esté **leads** y pide:
 
 > Califica los leads nuevos y dime a quién llamo primero.

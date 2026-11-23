@@ -1,0 +1,10 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "kit",
+  "version": "1.0.0",
+  "description": "Kit para construir con Claude: skills que enseñan a crear tu propio MCP, skills, plugins (con conectores) y agentes con horario, con el formato correcto.",
+  "author": { "name": "Hiveflow", "url": "https://hiveflow.ai" },
+  "homepage": "https://github.com/hiveflowai/claude-avanzado",
+  "license": "MIT",
+  "keywords": ["mcp", "skills", "plugins", "schedule", "taller"]
+}

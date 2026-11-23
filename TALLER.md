@@ -38,6 +38,8 @@ Trabaja desde `claude-avanzado/ejemplo` en los pasos siguientes.
 
 ## Paso 2 · Skills y subagentes
 
+Para crear las suyas con el formato correcto usa la skill `crear-skill` (o `plugins/kit/skills/crear-skill/SKILL.md`); para empaquetarlas y conectar servicios por URL, `crear-plugin`.
+
 1. Lee `ejemplo/.claude/skills/follow-up/SKILL.md`.
 2. Sigue esa skill para escribir el follow-up a **Dra. Paula Ríos, Clínica Dental Sonrisa** (lead `L1` de `datos/leads.json`) y guárdalo en `ejemplo/borradores/AAAA-MM-DD-clinica-dental-sonrisa.md`.
 3. Lee `ejemplo/.claude/agents/revisor.md` y revisa el borrador con esos criterios (si puedes lanzar subagentes, usa el subagente `revisor`).
@@ -47,11 +49,12 @@ Trabaja desde `claude-avanzado/ejemplo` en los pasos siguientes.
 
 ## Paso 3 · Herramientas: MCP y plugins
 
-Instala el plugin del repo (trae el MCP `leads` y una skill):
+Instala los dos plugins del repo: **leads** (un MCP + una skill) y **kit** (skills que te enseñan a crear MCP, skills, plugins y agentes con horario, con el formato correcto):
 
 ```bash
 claude plugin marketplace add hiveflowai/claude-avanzado
 claude plugin install leads@claude-avanzado
+claude plugin install kit@claude-avanzado
 ```
 
 **Si falla** (versión vieja de Claude Code o sin red a GitHub), conecta el MCP directo:
@@ -72,6 +75,8 @@ Si no puede reiniciar ahora, prueba el MCP tú mismo sin Claude (paso 5, comando
 
 ## Paso 4 · Un agente: el mismo prompt + un horario
 
+Guíate con la skill `programar-agente` (o `plugins/kit/skills/programar-agente/SKILL.md`).
+
 1. Lee `agente/prompt-lunes.md` y `agente/cron.sh`.
 2. Explica las dos formas de programarlo:
    - En Claude Code: `/schedule` → «cada lunes a las 8 a.m.» + el prompt (lo escribe la persona en la sesión).
@@ -91,7 +96,7 @@ printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | node ../plugins
 
    **Comprueba:** responde con `listar_leads`, `calificar_lead` y `registrar_lead`.
 
-3. **Ahora el suyo.** Pregúntale qué API o qué datos de su negocio quiere conectar. Si no tiene una, usa el clima de Open-Meteo (gratis, sin API key: `https://geocoding-api.open-meteo.com/v1/search?name=<ciudad>` y `https://api.open-meteo.com/v1/forecast?latitude=..&longitude=..&current=temperature_2m`).
+3. **Ahora el suyo.** Sigue la skill `crear-mcp` del plugin kit (o `plugins/kit/skills/crear-mcp/SKILL.md` si no está instalado). Pregúntale qué API o qué datos de su negocio quiere conectar. Si no tiene una, usa el clima de Open-Meteo (gratis, sin API key: `https://geocoding-api.open-meteo.com/v1/search?name=<ciudad>` y `https://api.open-meteo.com/v1/forecast?latitude=..&longitude=..&current=temperature_2m`).
    - Copia `plantillas/mi-mcp-hospedado.js` a `mi-mcp.js` (en `ejemplo/`).
    - Conviértelo en un MCP con 1 o 2 herramientas para esa API. Escribe cada `description` para Claude: qué hace y cuándo usarla. Errores con `isError: true` para que el modelo los lea. Nada de logs en stdout (solo stderr).
    - Pruébalo con `tools/list` y con un `tools/call` real, como arriba.

@@ -1,8 +1,22 @@
 {
   "name": "claude-avanzado",
-  "owner": { "name": "Hiveflow", "url": "https://hiveflow.ai" },
-  "metadata": { "description": "Taller «Claude avanzado con MCP»: contexto, skills, plugins, agentes programados y tu propio MCP." },
+  "owner": {
+    "name": "Hiveflow",
+    "url": "https://hiveflow.ai"
+  },
+  "metadata": {
+    "description": "Taller «Claude avanzado con MCP»: contexto, skills, plugins, agentes programados y tu propio MCP."
+  },
   "plugins": [
-    { "name": "leads", "source": "./plugins/leads", "description": "Tu primer MCP (leads de tu startup) + una skill que le dice a Claude cómo calificarlos." }
+    {
+      "name": "leads",
+      "source": "./plugins/leads",
+      "description": "Tu primer MCP (leads de tu startup) + una skill que le dice a Claude cómo calificarlos."
+    },
+    {
+      "name": "kit",
+      "source": "./plugins/kit",
+      "description": "Skills para crear tu propio MCP, skills, plugins (con conectores) y agentes con horario, con el formato correcto."
+    }
   ]
 }
