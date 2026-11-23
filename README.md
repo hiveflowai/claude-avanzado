@@ -76,7 +76,7 @@ Conéctalo: `claude mcp add mi-mcp -- node ./mi-mcp.js`
 
 ## 6 · ¿Y en producción? Hiveflow
 
-Todo esto corre en tu laptop. Cuando el agente tiene que correr solo, con aprobación humana, bitácora y para tu equipo, eso es **[Hiveflow](https://hiveflow.ai)**: conecta tu Claude a `https://mcp.hiveflow.ai` y pídele que **hospede tu MCP** (corre aislado en un sandbox) y lo use en un agente. Cuenta: [app.hiveflow.ai/signup](https://app.hiveflow.ai/signup).
+Todo esto corre en tu laptop. Cuando el agente tiene que correr solo, con aprobación humana, bitácora y para tu equipo, eso es **[Hiveflow](https://hiveflow.ai)**: conecta tu Claude a `https://mcp.hiveflow.ai` y pídele que **hospede tu MCP** (corre aislado en un sandbox) y lo use en un agente que **conteste por WhatsApp**: el lead escribe, el agente lo registra y califica con tu MCP, agenda la demo y, si pide descuento, te pide aprobación al celular. Cuenta: [app.hiveflow.ai/signup](https://app.hiveflow.ai/signup).
 
 ---
 
