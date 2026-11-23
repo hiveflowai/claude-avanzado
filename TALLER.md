@@ -134,7 +134,7 @@ ejemplo/
   }
 }
 ```
-3. **Cierra Claude por completo** (Cmd+Q) y ábrelo. En el chat, el menú de herramientas debe mostrar **agenda** con 2 herramientas.
+3. **Cierra Claude por completo** (Cmd+Q) y ábrelo. Si no conecta, usa la ruta completa de node en `"command"` (la que da `which node`, p. ej. `/opt/homebrew/bin/node`): las apps de escritorio no siempre ven el PATH de la terminal. En el chat, el menú de herramientas debe mostrar **agenda** con 2 herramientas.
 
 **Claude Code:**
 ```bash

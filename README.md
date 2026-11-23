@@ -77,7 +77,7 @@ Primero mira [`plugins/leads/mcp/server.js`](plugins/leads/mcp/server.js): ~100 
      ```json
      { "mcpServers": { "agenda": { "command": "node", "args": ["/RUTA/ABSOLUTA/ejemplo/mcp/agenda.js"], "env": { "AGENDA_API_URL": "http://localhost:4000" } } } }
      ```
-     Cierra Claude por completo y ábrelo: verás **agenda** en las herramientas.
+     Cierra Claude por completo y ábrelo: verás **agenda** en las herramientas. ¿No conecta? En `"command"` pon la ruta completa de node (`which node`).
    - **Claude Code:** `claude mcp add agenda -e AGENDA_API_URL=http://localhost:4000 -- node "$(pwd)/mcp/agenda.js"`
 5. **Pruébalo:** `printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | node mcp/agenda.js` · el Inspector: `npx @modelcontextprotocol/inspector node mcp/agenda.js` · y en Claude: *«¿Qué horarios tengo para la demo con la Clínica Dental Sonrisa? Agéndala.»*
 
