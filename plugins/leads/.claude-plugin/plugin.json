@@ -1,0 +1,10 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "leads",
+  "version": "1.0.0",
+  "description": "MCP de leads sin dependencias (listar, calificar y registrar) + skill de calificación. Ejemplo del taller «Claude avanzado con MCP».",
+  "author": { "name": "Hiveflow", "url": "https://hiveflow.ai" },
+  "homepage": "https://github.com/hiveflowai/claude-avanzado",
+  "license": "MIT",
+  "keywords": ["mcp", "leads", "skills", "taller"]
+}

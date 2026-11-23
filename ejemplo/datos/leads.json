@@ -1,0 +1,6 @@
+[
+  { "id": "L1", "estado": "nuevo", "empresa": "Clínica Dental Sonrisa", "contacto": "Dra. Paula Ríos", "mensaje": "Quiero cotizar el plan Equipo, somos 6 doctores y es urgente", "tamano": 6 },
+  { "id": "L2", "estado": "nuevo", "empresa": "Consultorio Pediátrico Osito", "contacto": "Luis Mena", "mensaje": "¿Tienen demo? Nos faltan muchos pacientes a las citas", "tamano": 2 },
+  { "id": "L3", "estado": "nuevo", "empresa": "Fisioterapia Movimiento", "contacto": "Karla Díaz", "mensaje": "Solo curiosidad, ¿hay versión gratis?", "tamano": 1 },
+  { "id": "L4", "estado": "nuevo", "empresa": "Hospital San José", "contacto": "Administración", "mensaje": "Buscamos algo para 3 sucursales, esta semana queremos ver precios", "tamano": 40 }
+]
