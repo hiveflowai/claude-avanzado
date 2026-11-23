@@ -6,6 +6,9 @@ Taller práctico de **John Olven** ([Hiveflow](https://hiveflow.ai)). Lo sigues 
 CLAUDE.md (contexto) ─► Skill (proceso) ─► MCP + plugin (herramientas) ─► agente con horario ─► tu MCP en la nube
 ```
 
+> **¿Prefieres que tu agente te guíe?** Abre Claude Code en una carpeta vacía y pégale:
+> *Lee https://github.com/hiveflowai/claude-avanzado/blob/main/TALLER.md y guíame paso a paso por el taller. Haz tú los comandos y explícame qué aprendí en cada paso.*
+
 Ejemplo: **Acme Agenda**, una startup ficticia que vende recordatorios por WhatsApp a clínicas. Cámbiala por la tuya.
 
 ## 0 · Antes de empezar (2 min)
@@ -44,6 +47,8 @@ MCP es el USB-C de la IA: un estándar para que Claude use herramientas. Instala
 /plugin marketplace add hiveflowai/claude-avanzado
 /plugin install leads@claude-avanzado
 ```
+
+O desde la terminal: `claude plugin marketplace add hiveflowai/claude-avanzado && claude plugin install leads@claude-avanzado`.
 
 Reinicia (o `/reload-plugins`), revisa con `/mcp` que esté **leads** y pide:
 
