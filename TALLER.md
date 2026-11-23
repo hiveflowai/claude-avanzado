@@ -85,26 +85,75 @@ Guíate con la skill `programar-agente` (o `plugins/kit/skills/programar-agente/
 
 **Explica:** un comando es una tarea; con horario (o un evento que lo dispare) es un agente. El prompt es el proceso.
 
-## Paso 5 · Su propio MCP
+## Paso 5 · Su propio MCP: datos → API → MCP → conectar → probar
 
-1. Lee `plugins/leads/mcp/server.js` y explícale sus 3 partes: **los datos**, **las herramientas** (nombre + descripción escrita para Claude + esquema de entrada) y **el protocolo** (JSON-RPC por stdin/stdout: `initialize`, `tools/list`, `tools/call`).
-2. Pruébalo sin Claude (desde `ejemplo/`):
+Primero, para entender el formato, lee `plugins/leads/mcp/server.js` y explícale sus 3 partes: **los datos**, **las herramientas** (nombre + descripción escrita para Claude + esquema) y **el protocolo** (JSON-RPC por stdin/stdout: `initialize`, `tools/list`, `tools/call`). Ahora construyen uno de verdad, de punta a punta. Todo desde `ejemplo/`.
 
+### 5.1 · Los datos
+Muéstrale como **tablas** `datos/agenda.json` (horario por día y citas ya tomadas) y `datos/leads.json` (id, empresa, contacto, qué pidió). Es la información de la startup que el agente va a usar.
+
+### 5.2 · Monta la API
 ```bash
-printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | node ../plugins/leads/mcp/server.js
+node api/server.js        # deja esta terminal abierta: http://localhost:4000
+```
+En otra terminal, pruébala:
+```bash
+curl "localhost:4000/disponibilidad?desde=2026-11-13&dias=3"
+curl -X POST localhost:4000/citas -H "Content-Type: application/json" -d '{"lead_id":"L1","fecha":"2026-11-16","hora":"10:00"}'
+```
+**Comprueba:** el 16 de noviembre de 2026 sale como `festivo: "Día de la Revolución"` sin horarios (la API consulta los festivos de México en Nager.Date) y la segunda llamada responde `409` porque ese día no está libre.
+**Explica:** la API ya existía antes de la IA (aquí es `api/server.js`; en su startup es la suya). El MCP no la reemplaza: la envuelve para que Claude la use.
+
+### 5.3 · De la API al MCP
+Con la skill `crear-mcp` (o `plugins/kit/skills/crear-mcp/SKILL.md`), crea `mcp/agenda.js`, Node 18+ sin dependencias, que llame a la API (`AGENDA_API_URL`, por defecto `http://localhost:4000`):
+- `GET /disponibilidad` → herramienta `ver_disponibilidad({ desde, dias })`
+- `POST /citas` → herramienta `agendar_demo({ lead_id, fecha, hora })`; si la API responde 409, devuélvelo con `isError: true` y los horarios libres.
+
+Cada `description` escrita para Claude; logs solo a stderr. Si la persona se atora, la solución está en `soluciones/mcp-agenda.js` (compárala y explícala, no la copies sin más).
+
+Estructura final:
+```
+ejemplo/
+├── datos/agenda.json · leads.json   ← los datos
+├── api/server.js                    ← la API
+└── mcp/agenda.js                    ← el MCP (llama a la API)
 ```
 
-   **Comprueba:** responde con `listar_leads`, `calificar_lead` y `registrar_lead`.
+### 5.4 · Conéctalo
+**Claude de escritorio** (díselo paso a paso; no edites su configuración sin permiso):
+1. Claude → **Configuración → Desarrollador → Editar configuración**. Abre `claude_desktop_config.json` (Mac: `~/Library/Application Support/Claude/`, Windows: `%APPDATA%\Claude\`).
+2. Agrega, con la **ruta absoluta** real (dásela con `pwd`):
+```json
+{
+  "mcpServers": {
+    "agenda": {
+      "command": "node",
+      "args": ["/RUTA/ABSOLUTA/claude-avanzado/ejemplo/mcp/agenda.js"],
+      "env": { "AGENDA_API_URL": "http://localhost:4000" }
+    }
+  }
+}
+```
+3. **Cierra Claude por completo** (Cmd+Q) y ábrelo. En el chat, el menú de herramientas debe mostrar **agenda** con 2 herramientas.
 
-3. **Ahora el suyo: el MCP `agenda` de Acme Agenda.** Sigue la skill `crear-mcp` del plugin kit (o `plugins/kit/skills/crear-mcp/SKILL.md` si no está instalado). Es la pieza que usa el agente de WhatsApp para agendar la demo con un lead. Si la persona prefiere conectar la API de su propia startup, usa la suya y aplica los mismos pasos.
-   - Crea `ejemplo/mcp-agenda.js` (Node 18+, sin dependencias; parte de `plantillas/mi-mcp-hospedado.js`) con dos herramientas:
-     - `ver_disponibilidad({ desde, dias })`: horarios libres de los próximos `dias` (por defecto 5) a partir de `desde` (AAAA-MM-DD, por defecto hoy), usando el `horario` de `datos/agenda.json`, quitando las `citas` ya tomadas, los fines de semana y los **días festivos de México** de la API pública **Nager.Date** (gratis, sin llave): `https://date.nager.at/api/v3/PublicHolidays/<año>/MX`.
-     - `agendar_demo({ lead_id, fecha, hora })`: valida que el horario esté libre (si no, `isError: true` con los horarios libres de ese día), lo guarda en `citas` con la empresa del lead (de `datos/leads.json`) y devuelve la confirmación.
-   - Escribe cada `description` para Claude: qué hace y cuándo usarla. Errores corregibles con `isError: true`. Nada de logs en stdout (solo stderr).
-   - Pruébalo con `tools/list` y con `tools/call` de las dos herramientas (por ejemplo, agenda una demo para `L1`). Comprueba que un día festivo (16 de noviembre de 2026, Revolución) **no** aparezca como disponible.
-   - Conéctalo: `claude mcp add agenda -- node "$(pwd)/mcp-agenda.js"` y dile que reinicie y pida: *«¿Qué horarios tengo para la demo con la Clínica Dental Sonrisa? Agéndala el primero libre.»*
+**Claude Code:**
+```bash
+claude mcp add agenda -e AGENDA_API_URL=http://localhost:4000 -- node "$(pwd)/mcp/agenda.js"
+```
+Reinicia y revisa con `/mcp`.
 
-**Explica:** la descripción de cada herramienta es un prompt; es lo que hace que Claude la use bien.
+### 5.5 · Pruébalo (de abajo hacia arriba)
+1. **La API:** los `curl` del 5.2.
+2. **El MCP sin Claude:**
+```bash
+printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | node mcp/agenda.js
+printf '%s\n' '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"ver_disponibilidad","arguments":{"dias":3}}}' | node mcp/agenda.js
+```
+3. **Con el Inspector** (una página web para llamar las herramientas a mano): `npx @modelcontextprotocol/inspector node mcp/agenda.js`.
+4. **En Claude:** *«¿Qué horarios tengo para la demo con la Clínica Dental Sonrisa? Agéndala el primero libre.»* Debe llamar `ver_disponibilidad` y luego `agendar_demo`; revisa que la cita quedó en `datos/agenda.json`.
+5. **Si no aparece en Claude de escritorio:** revisa la ruta absoluta, que la API esté corriendo y el log `~/Library/Logs/Claude/mcp-server-agenda.log` (Mac).
+
+**Explica:** se prueba de abajo hacia arriba: si la API falla, el MCP falla; si el MCP no responde a `tools/list`, Claude no lo ve. La descripción de cada herramienta es un prompt: es lo que hace que Claude la use bien.
 
 ## Paso 6 · Producción: Hiveflow y WhatsApp
 

@@ -65,23 +65,23 @@ Un comando es una tarea; **con horario es un agente**. El prompt: [`agente/promp
 - **En Claude Code:** `/schedule` → «cada lunes 8 a.m.» + el prompt.
 - **Hecho en casa:** [`agente/cron.sh`](agente/cron.sh) con `claude -p`, solo las herramientas permitidas (`--allowedTools`) y salida JSON.
 
-## 5 · Tu propio MCP (10 min)
+## 5 · Tu propio MCP: datos → API → MCP → conectar → probar (15 min)
 
-Abre [`plugins/leads/mcp/server.js`](plugins/leads/mcp/server.js): ~100 líneas, sin dependencias. Tres partes: **tus datos**, **las herramientas** (nombre + descripción escrita para Claude + esquema) y **el protocolo** (JSON-RPC por stdio).
+Primero mira [`plugins/leads/mcp/server.js`](plugins/leads/mcp/server.js): ~100 líneas, sin dependencias, tres partes (**datos**, **herramientas**, **protocolo**). Ahora uno de verdad, desde `ejemplo/`:
 
-Pruébalo sin Claude:
+1. **Los datos:** [`datos/agenda.json`](ejemplo/datos/agenda.json) (horario y citas) y [`datos/leads.json`](ejemplo/datos/leads.json).
+2. **La API:** `node api/server.js` → `http://localhost:4000` (`GET /disponibilidad`, `POST /citas`; descarta los festivos de México con Nager.Date). Pruébala: `curl "localhost:4000/disponibilidad?dias=3"`.
+3. **El MCP:** pídele a Claude *«Usa la skill crear-mcp: hazme mcp/agenda.js sobre la API (ver_disponibilidad y agendar_demo)»*. Solución de referencia: [`soluciones/mcp-agenda.js`](soluciones/mcp-agenda.js).
+4. **Conéctalo:**
+   - **Claude de escritorio:** Configuración → Desarrollador → Editar configuración → en `claude_desktop_config.json`:
+     ```json
+     { "mcpServers": { "agenda": { "command": "node", "args": ["/RUTA/ABSOLUTA/ejemplo/mcp/agenda.js"], "env": { "AGENDA_API_URL": "http://localhost:4000" } } } }
+     ```
+     Cierra Claude por completo y ábrelo: verás **agenda** en las herramientas.
+   - **Claude Code:** `claude mcp add agenda -e AGENDA_API_URL=http://localhost:4000 -- node "$(pwd)/mcp/agenda.js"`
+5. **Pruébalo:** `printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | node mcp/agenda.js` · el Inspector: `npx @modelcontextprotocol/inspector node mcp/agenda.js` · y en Claude: *«¿Qué horarios tengo para la demo con la Clínica Dental Sonrisa? Agéndala.»*
 
-```bash
-printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | node ../plugins/leads/mcp/server.js
-```
-
-Ahora el tuyo: el MCP **`agenda`** de Acme Agenda, la pieza con la que el agente agenda la demo con un lead. Parte de [`plantillas/mi-mcp-hospedado.js`](plantillas/mi-mcp-hospedado.js) y pídele a Claude:
-
-> Usa la skill crear-mcp: hazme el MCP `agenda` con `ver_disponibilidad` (horario de `datos/agenda.json`, sin citas tomadas, fines de semana ni festivos de México de la API Nager.Date) y `agendar_demo` (lead, fecha, hora). Pruébalo con tools/list y tools/call.
-
-Conéctalo: `claude mcp add agenda -- node "$(pwd)/mcp-agenda.js"` y pregunta: *«¿Qué horarios tengo para la demo con la Clínica Dental Sonrisa?»*
-
-¿Tienes tu propia API? Mismos pasos, cambiando las herramientas por las de tu startup.
+¿Tienes tu propia API? Mismos pasos con tus endpoints.
 
 ## 6 · ¿Y en producción? Hiveflow
 

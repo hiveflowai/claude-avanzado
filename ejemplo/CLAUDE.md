@@ -7,6 +7,10 @@ Plan Básico $499 MXN/mes · Plan Equipo $1,490 MXN/mes (hasta 10 doctores).
 - Clínicas de 2 a 15 doctores. Decide el director médico o la administradora.
 - Su dolor: pacientes que no llegan a la cita y teléfono saturado.
 
+## Casos (ejemplo, para follow-ups)
+- Clínica Dental Mérida (5 doctores): las citas perdidas bajaron de 22 % a 9 % en dos meses con recordatorios por WhatsApp.
+- Consultorio Pediátrico Luna (2 doctores): dejó de contestar 40 llamadas al día para confirmar citas.
+
 ## Tono
 Cercano y directo, de tú. Sin promesas que no podemos cumplir.
 
