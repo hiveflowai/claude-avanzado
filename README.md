@@ -75,11 +75,13 @@ Pruébalo sin Claude:
 printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | node ../plugins/leads/mcp/server.js
 ```
 
-Ahora el tuyo: copia [`plantillas/mi-mcp-hospedado.js`](plantillas/mi-mcp-hospedado.js) y pídele a Claude:
+Ahora el tuyo: el MCP **`agenda`** de Acme Agenda, la pieza con la que el agente agenda la demo con un lead. Parte de [`plantillas/mi-mcp-hospedado.js`](plantillas/mi-mcp-hospedado.js) y pídele a Claude:
 
-> Convierte esta plantilla en un MCP para [tu API]: herramientas X y Y, con descripciones para Claude. Pruébalo con tools/list.
+> Usa la skill crear-mcp: hazme el MCP `agenda` con `ver_disponibilidad` (horario de `datos/agenda.json`, sin citas tomadas, fines de semana ni festivos de México de la API Nager.Date) y `agendar_demo` (lead, fecha, hora). Pruébalo con tools/list y tools/call.
 
-Conéctalo: `claude mcp add mi-mcp -- node ./mi-mcp.js`
+Conéctalo: `claude mcp add agenda -- node "$(pwd)/mcp-agenda.js"` y pregunta: *«¿Qué horarios tengo para la demo con la Clínica Dental Sonrisa?»*
+
+¿Tienes tu propia API? Mismos pasos, cambiando las herramientas por las de tu startup.
 
 ## 6 · ¿Y en producción? Hiveflow
 

@@ -10,6 +10,8 @@ Un MCP es un proceso que habla **JSON-RPC 2.0 por stdin/stdout**, un mensaje JSO
 ## 1 · Entiende qué conectar
 Pregunta (si no lo dijeron): qué API o datos, qué 1 a 3 acciones necesita, y si requiere API key (va en una variable de entorno, **nunca** en el código).
 
+Ejemplo del taller: el MCP `agenda` de Acme Agenda (`ver_disponibilidad` y `agendar_demo`), con el horario de `datos/agenda.json` y los festivos de México de `https://date.nager.at/api/v3/PublicHolidays/<año>/MX`.
+
 ## 2 · Diseña las herramientas
 Por herramienta:
 - `name`: snake_case, verbo + objeto (`buscar_cliente`, `crear_cotizacion`).

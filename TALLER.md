@@ -96,11 +96,13 @@ printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | node ../plugins
 
    **Comprueba:** responde con `listar_leads`, `calificar_lead` y `registrar_lead`.
 
-3. **Ahora el suyo.** Sigue la skill `crear-mcp` del plugin kit (o `plugins/kit/skills/crear-mcp/SKILL.md` si no está instalado). Pregúntale qué API o qué datos de su negocio quiere conectar. Si no tiene una, usa el clima de Open-Meteo (gratis, sin API key: `https://geocoding-api.open-meteo.com/v1/search?name=<ciudad>` y `https://api.open-meteo.com/v1/forecast?latitude=..&longitude=..&current=temperature_2m`).
-   - Copia `plantillas/mi-mcp-hospedado.js` a `mi-mcp.js` (en `ejemplo/`).
-   - Conviértelo en un MCP con 1 o 2 herramientas para esa API. Escribe cada `description` para Claude: qué hace y cuándo usarla. Errores con `isError: true` para que el modelo los lea. Nada de logs en stdout (solo stderr).
-   - Pruébalo con `tools/list` y con un `tools/call` real, como arriba.
-   - Conéctalo: `claude mcp add mi-mcp -- node "$(pwd)/mi-mcp.js"` y dile que reinicie y lo use.
+3. **Ahora el suyo: el MCP `agenda` de Acme Agenda.** Sigue la skill `crear-mcp` del plugin kit (o `plugins/kit/skills/crear-mcp/SKILL.md` si no está instalado). Es la pieza que usa el agente de WhatsApp para agendar la demo con un lead. Si la persona prefiere conectar la API de su propia startup, usa la suya y aplica los mismos pasos.
+   - Crea `ejemplo/mcp-agenda.js` (Node 18+, sin dependencias; parte de `plantillas/mi-mcp-hospedado.js`) con dos herramientas:
+     - `ver_disponibilidad({ desde, dias })`: horarios libres de los próximos `dias` (por defecto 5) a partir de `desde` (AAAA-MM-DD, por defecto hoy), usando el `horario` de `datos/agenda.json`, quitando las `citas` ya tomadas, los fines de semana y los **días festivos de México** de la API pública **Nager.Date** (gratis, sin llave): `https://date.nager.at/api/v3/PublicHolidays/<año>/MX`.
+     - `agendar_demo({ lead_id, fecha, hora })`: valida que el horario esté libre (si no, `isError: true` con los horarios libres de ese día), lo guarda en `citas` con la empresa del lead (de `datos/leads.json`) y devuelve la confirmación.
+   - Escribe cada `description` para Claude: qué hace y cuándo usarla. Errores corregibles con `isError: true`. Nada de logs en stdout (solo stderr).
+   - Pruébalo con `tools/list` y con `tools/call` de las dos herramientas (por ejemplo, agenda una demo para `L1`). Comprueba que un día festivo (16 de noviembre de 2026, Revolución) **no** aparezca como disponible.
+   - Conéctalo: `claude mcp add agenda -- node "$(pwd)/mcp-agenda.js"` y dile que reinicie y pida: *«¿Qué horarios tengo para la demo con la Clínica Dental Sonrisa? Agéndala el primero libre.»*
 
 **Explica:** la descripción de cada herramienta es un prompt; es lo que hace que Claude la use bien.
 
