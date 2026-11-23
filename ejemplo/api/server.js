@@ -39,7 +39,9 @@ async function disponibilidad(desde = hoy(), dias = 5) {
     const base = agenda.horario[dia];
     if (!base) continue; // fin de semana
     const tomadas = agenda.citas.filter((c) => c.fecha === fecha).map((c) => c.hora);
-    out.push({ fecha, dia, horas: base.filter((h) => !tomadas.includes(h)) });
+    // Hoy: solo las horas que todavía no pasan (hora de la Ciudad de México)
+    const ahora = fecha === hoy() ? new Date().toLocaleTimeString('en-GB', { timeZone: 'America/Mexico_City', hour: '2-digit', minute: '2-digit' }) : '';
+    out.push({ fecha, dia, horas: base.filter((h) => !tomadas.includes(h) && h > ahora) });
   }
   return out;
 }

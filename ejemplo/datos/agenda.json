@@ -1,8 +1,34 @@
 {
   "zona": "America/Mexico_City",
   "duracion_min": 30,
-  "horario": { "lunes": ["10:00", "12:00", "16:30"], "martes": ["10:00", "16:30"], "miercoles": ["10:00", "12:00"], "jueves": ["12:00", "16:30"], "viernes": ["10:00"] },
+  "horario": {
+    "lunes": [
+      "10:00",
+      "12:00",
+      "16:30"
+    ],
+    "martes": [
+      "10:00",
+      "16:30"
+    ],
+    "miercoles": [
+      "10:00",
+      "12:00"
+    ],
+    "jueves": [
+      "12:00",
+      "16:30"
+    ],
+    "viernes": [
+      "10:00"
+    ]
+  },
   "citas": [
-    { "fecha": "2026-11-25", "hora": "10:00", "lead_id": "L4", "empresa": "Hospital San José" }
+    {
+      "fecha": "2026-11-25",
+      "hora": "10:00",
+      "lead_id": "L4",
+      "empresa": "Hospital San José"
+    }
   ]
 }
